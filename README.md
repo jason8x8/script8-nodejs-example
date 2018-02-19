@@ -15,7 +15,8 @@ $ npm install --save
 $ node server.js
 $ ./ngrok http 5000
 
-Copy the https URL shown on ngrok, configure Script8 developer account set it as voiceWebHookHttpURL, and http method GET or POST
+Copy the https URL shown on ngrok, configure Script8 developer account set it as 
+voiceWebHookHttpURL, and http method GET or POST
 ```
 
 ## Additional Resources
