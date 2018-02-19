@@ -1,0 +1,16 @@
+{
+  "name": "example-nodejs-express",
+  "version": "0.0.4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deis/example-nodejs-express.git"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "4.5.x"
+  },
+  "dependencies": {
+    "basic-auth-connect": "^1.0.0",
+    "express": "4.15.x"
+  }
+}
