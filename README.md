@@ -1,6 +1,6 @@
 # Script8 Node.js Quick Start Guide
 
-This guide will walk you through deploying a Node.js for Script8 service development
+This guide will walk you through deploying a Node.js with express 4 for Script8 service development
 
 ## Dowload ngrok
 
