@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE doc [
+<!ENTITY schedules SYSTEM "./voiceapps/schedules/trueblue_schedules.xml">
+]>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="TrueBlue Branch NPA Routing" version="1.0">
+
+    <meta name="author" value="Jason Liu"/>
+    <meta name="copyright" value="8x8 Inc"/>
+    <meta name="email" value="jliu@8x8.com"/>
+    <meta name="logLevel" value="debug"/>
+
+    <script>
+        <!-- define javascript functions for script8 logic -->
+        <![CDATA[
+            function callerLookupCriteria( address) {
+                     return "caller_number = '" + address+"'";
+            }
+            function getStrCallerIdentity(str, address, name) {
+                 var result = {};
+
+                if(str && str.length > 0) {
+                    var props = str.split(",");
+                    result.callerNumber = address;
+                    result.id  = props[0];
+                    result.callerName  = props[1].trim();
+                    result.callerType  = props[2].trim();
+                    console.log("Caller Identity found in db. Result identity:"+JSON.stringify(result));
+                } else {
+                    result.callerNumber = address;
+                    result.id  = 'NA';
+                    result.callerName  = name;
+                    result.callerType  = 'customer';
+                    console.log("Caller Identity is not found from db. Result identity:"+JSON.stringify(result));
+                }
+                return result;
+            }
+            function getSQLCallerIdentity(q_result, address, name) {
+                 var result = {};
+
+                if(q_result && q_result.caller_number) {
+                    result.callerNumber = q_result.caller_number;
+                    result.id  = q_result.id;
+                    result.callerName  = q_result.caller_name;
+                    result.callerType  = q_result.caller_type;
+                    console.log("Caller Identity found in db. Result identity:"+JSON.stringify(result));
+                } else {
+                    result.callerNumber = address;
+                    result.id  = 'NA';
+                    result.callerName  = name;
+                    result.callerType  = 'unknown';
+                    console.log("Caller Identity is not found from db. Result identity:"+JSON.stringify(result));
+                }
+                return result;
+            }
+            function makeEmailSubjectTemplate(title) {
+                return title+' <!--RECEIVED_FROM--> [<!--CALLERNAME-->] to <!--EXTENSION-->[<!--FULLNAME-->] on <!--DATE--> for <!--RECEIVED_FROM_DURATION--> sec';
+            }
+            function makeCustomEmailContent(reason, dnis) {
+                return '<h4>Call Reason: '+reason+'<br>Called Phone:'+dnis+'<h4>';
+                //return 'Call Reason: '+reason+'<br>Called Phone:'+dnis;
+            }
+
+	        function onCallGroupLookupCriteria(branchId) {
+		         return "branchId = '"+branchId+"'";
+	        }
+            function makeVMHuntingGroup(queryResult) {
+                var group = [];
+                if(queryResult) {
+                     for (var i = 0; i < queryResult.length; i++) {
+                            var worker = {};
+                            worker.id = queryResult[i].workerId;
+                            worker.branchId = queryResult[i].branchId;
+                            worker.name = queryResult[i].workerName;
+                            worker.number = queryResult[i].workerNumber;
+                            worker.smsNotif = queryResult[i].smsNotif && queryResult[i].smsNotif === 'true'? true : false;
+                            worker.callNotif = queryResult[i].callNotif && queryResult[i].callNotif === 'true'? true : false;
+                            worker.emailNotif = queryResult[i].emailNotif && queryResult[i].emailNotif === 'true'? true : false;
+                            worker.emailAddress = queryResult[i].emailAddress;
+                            worker.onCall = queryResult[i].onCall && queryResult[i].onCall === 'true'? true : false;
+
+                            group.push(worker);
+                     }
+                }
+                return JSON.stringify(group);
+            }
+            ]]>
+    </script>
+    <init>
+        <var name="branchInfo" tclExpr="'getBranchByExtension -extension '+(session.call.lra ? session.call.lra : session.route.to.address)"/>
+        <var name="extensionInfo" tclExpr="'getExtensionInfo -extension '+(session.call.lra ? session.call.lra : session.route.to.address)"/>
+        <log expr="'I  got branch '+JSON.stringify(branchInfo)"/>
+    </init>
+
+    <action id="customer">
+        <menu id="customer_menu">
+            <audio meta="audio_AA_1002" src="AA_1002"/>
+            <if cond="audio_AA_1002.exists">
+                <play>
+                    <audio src="AA_1001"/>
+                </play>
+                <else/>
+                <say>You are identified as a customer</say>
+            </if>
+            <default>
+                <log expr="'option 1 is selected...'"/>
+                <!-- urgent matter -->
+                <condition id="branch_open">
+                    <scheduleRef id="trueblue_calendar.open"/>
+                    <action>
+                        <say>The Branch is Open, please wait your call will be redirected</say>
+                        <transfer destinationExpr="branchInfo.receptionist" fallback="branch_2nd_line" ringTimeout="15"  timeUnit="seconds"/>
+                    </action>
+                </condition>
+                <condition id="branch_close">
+                    <scheduleRef id="trueblue_calendar.open" inverse="true"/>
+                    <action>
+                        <say>The Branch is Close</say>
+                        <query name="q_result" object="oncall_group" type="mysql" fields="*" criteriaExpr="onCallGroupLookupCriteria(branchInfo.id)" limit="10"/>
+
+                        <callContext name="customVoicemailHuntingGroup" expr="makeVMHuntingGroup(q_result)"/>
+                        <callContext name="customVoicemailEmailSubject" expr="makeEmailSubjectTemplate('Trueblue Urgent Customer VM')"/>
+                        <callContext name="customVoicemailEmailInfo"
+                                     expr="makeCustomEmailContent('Trueblue Urgent Customer VM', session.call.dnis ? session.call.dnis : session.callee.address)"/>
+
+                        <transfer destinationExpr="branchInfo.receptionist" voiceMail="true"/>
+                    </action>
+                </condition>
+                <say> No Menu match </say>
+            </default>
+        </menu>
+        <goto id="#goodbye"/>
+    </action>
+
+    <action id="goodbye">
+        <say>Thank you using virtual office and good bye</say>
+    </action>
+    &schedules;
+</cpxml>

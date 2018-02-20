@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+    <script>
+        <![CDATA[
+            function makeGroupMembers (content) {
+                var group = [];
+                if(content) {
+                    for(var i=0;i < content.feed.entry.length;i++) {
+                        group.push(content.feed.entry[i].gsx$extension.$t);
+                    }
+                }
+                return group;
+            }
+        ]]>
+    </script>
+
+    <!--
+    <var name="groupExt" tclExpr="'getGroupAddressList -verbose true -number 2001 -json true'" json="true"/>
+    <log expr="'I got '+JSON.stringify(groupExt)"/>
+    <log expr="'I got '+JSON.stringify(groupExt[0].members)"/>
+    -->
+    <say>please wait and enjoy the music while waiting for the emergency conference call...</say>
+    <!--
+    call attributes:
+
+    call mode:
+        bridge      - bridge two parties call with mixer
+        transfer    - two parties call without mixer mode
+        conference  - N parties call with mixer. Any party left does not affect other parties
+        confhost    - N parties call with mixer. Require host or conference master to stay in the conference.
+                    If master/host is left, then the conference is ended automatically.
+    announceOnly: "true" for annoucne only mode
+    recordOptionExpr: "'always'" or "'off'"
+
+
+    -->
+    <!--
+    <call mode="conference">
+        <ring>
+            <audio src="bach.au"/>
+        </ring>
+        <group name="team" intercom="true" callPattern="unison">
+            <number>1001</number>
+            <number>1020</number>
+        </group>
+    </call>
+    -->
+    <action id="google">
+        <http name="result" expr="'https://spreadsheets.google.com/feeds/list/1-n3353BfWII6VjJkSPxrxnasYf5uUKSqJlLEFURNG4s/od6/public/values?alt=json'"
+              method="GET" accept="application/json" sendSessionParams="false">
+        </http>
+        <log expr="'I got '+JSON.stringify(result.content)"/>
+        <var name="groupMembers" expr="makeGroupMembers(result.content)"/>
+    </action>
+    <action id="conf">
+        <call mode="confhost">
+            <ring>
+                <audio src="bach.au"/>
+            </ring>
+            <group name="team" intercom="true" callPattern="unison" memberExpr="groupMembers.join()"/>
+            <!--
+            <screening expectInputExpr="'.*'">
+                <say>This is an emergency meeting, please press any key to accept the call</say>
+            </screening>
+            -->
+            <announcement>
+                <say>please wait, while you are being connected to the conference</say>
+            </announcement>
+
+        </call>
+        <log expr="'I got call result:'+session.call.result"/>
+        <say>Thank you for using eight by eight virtual office, good bye!</say>
+    </action>
+</cpxml>

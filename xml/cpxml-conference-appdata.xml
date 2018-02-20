@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu"/>
+    <meta name="copyright" value="8x8 Inc"/>
+    <meta name="email" value="jliu@8x8.com"/>
+    <meta name="logLevel" value="debug"/>
+
+    <script>
+        <![CDATA[
+            function makeOptions(subject) {
+                return '{"appData" : {"conference" : subject }}';
+            }
+        ]]>
+    </script>
+    <!--
+      callContext CallContext{callId='1495353263639', origStartTime='1495388420110', cdrIndex=2, cseq=10,Context{systemAttrMap=
+      {secondParty=AttributeImpl{name='secondParty', value=3333, type=SYSTEM}, callSubscriptionMgr=AttributeImpl{name='callSubscriptionMgr',
+       value=com.netergynet.phonelet.cti.server.CallSubscriptionMgr@1670fb6, type=SYSTEM}, followForwarding=AttributeImpl{name='followForwarding',
+       value=true, type=SYSTEM}, direction=AttributeImpl{name='direction', value=1, type=SYSTEM}, fallbackDest=AttributeImpl{name='fallbackDest',
+       value=, type=SYSTEM}, applicationJSON=AttributeImpl{name='applicationJSON', value={"_callOptions":{"playWelcome":true,"source":"14086540972",
+       "destination":"3333","subject":"meeting123"},"appData":{"contactName":"jason Liu"}}, type=SYSTEM}, ext=AttributeImpl{name='ext',
+       value=6805, type=SYSTEM}, callSubject=AttributeImpl{name='callSubject', value=meeting123, type=SYSTEM}, paramMap=AttributeImpl{name='paramMap',
+        value={pdid=14086206805, ani=14086540972, cName=meeting123, ext=6805}, type=SYSTEM}, lastCallRoute=AttributeImpl{name='lastCallRoute',
+        value=CallRoute [callerAddr=591, calleeAddr=CPXML, lra=3333], type=SYSTEM}, firstParty=AttributeImpl{name='firstParty', value=14086540972,
+        type=SYSTEM}, primaryDid=AttributeImpl{name='primaryDid', value=14086206805, type=SYSTEM}, extSet=AttributeImpl{name='extSet', value=[6805],
+        type=SYSTEM}, transferLRA=AttributeImpl{name='transferLRA', value=null, type=SYSTEM}, ani=AttributeImpl{name='ani', value=VOM user1,14086206805,
+         type=SYSTEM}, routeHistory=AttributeImpl{name='routeHistory', value=[CallRoute [callerAddr=591, calleeAddr=14086540972, lra=null],
+         CallRoute [callerAddr=591, calleeAddr=CPXML, lra=3333]], type=SYSTEM}, initiatedConnId=AttributeImpl{name='initiatedConnId',
+         value=1495353263641, type=SYSTEM}, unconditionalOnaApplied=AttributeImpl{name='unconditionalOnaApplied', value=, type=SYSTEM},
+          callerId=AttributeImpl{name='callerId', value=meeting123,14086540972, type=SYSTEM}, isClickToDial=AttributeImpl{name='isClickToDial',
+           value=true, type=SYSTEM}, cpxmlRoutes=AttributeImpl{name='cpxmlRoutes', value=[CPXML;lra=3333], type=SYSTEM},
+           partyMap=AttributeImpl{name='partyMap', value={1495353263642=14086540972}, type=SYSTEM}, VMTransferLRA=AttributeImpl{name='VMTransferLRA',
+           value=null, type=SYSTEM}, cpxmlContext=AttributeImpl{name='cpxmlContext', value=com._8x8.cpxml.core.CPXMLContext@6514b, type=SYSTEM},
+            transferFrom=AttributeImpl{name='transferFrom', value=6805, type=SYSTEM}}, customAttrMap={}, observerSet=[]}} fullEvents:true
+    -->
+
+    <callContext name="applicationJSON"/>
+    <var name="callData" expr="JSON.parse(applicationJSON)"/>
+    <log expr="'I got conference call applicationJSON:'+JSON.stringify(callData)"/>
+
+    <say expr="'Hello '+callData.appData.contactName+', this meeting subject is ..........'+callData._callOptions.subject"/>
+    <say expr="'please wait while connecting you to the conference...'"/>
+
+    <joinConference expr="callData._callOptions.subject">
+        <onSoloParticipant minLoopInterval="4000">
+            <say expr="'you are the only one in the conference now, please enjoy the music while waiting...'"/>
+            <play maxTime="10" timeUnit="seconds">
+                <audio src="bach.au"/>
+            </play>
+        </onSoloParticipant>
+        <!--
+        <onEnterConference>
+            <notification expr="'http://httpbin.org/post'" httpMethod="POST" contentType="application/json">
+                <param name="dt" body="false" expr="new Date().toDateString()"/>
+                <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+                <param name="grant_type" body="true" expr="'client_credentials'"/>
+                <body expr="makeOptions(callData._callOptions.subject)"/>
+            </notification>
+        </onEnterConference>
+        -->
+        <onLeaveConference>
+            <next action="#LeaveConference"/>
+        </onLeaveConference>
+    </joinConference>
+
+    <action id="LeaveConference">
+        <say>Thank you for using 8x8 office</say>
+    </action>
+</cpxml>

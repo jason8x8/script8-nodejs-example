@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu"/>
+    <meta name="copyright" value="8x8 Inc"/>
+    <meta name="email" value="jliu@8x8.com"/>
+    <meta name="logLevel" value="debug"/>
+
+    <log expr="'I got '+session.call.lra"/>
+    <var name="cc" expr="1"/>
+    <while cond="true">
+        <log expr="'I got counter:'+cc"/>
+        <assign name="cc" expr="cc+1"/>
+    </while>
+
+    <var name="extArray" tclExpr="'getExtensions -verbose true -branchId BRANCH01'" json="true"/>
+    <!-- the following foreach loop can be written directly with javascript as well, how to write javascript functions, you can check other examples like Geo Routing with NPA/NXX-->
+    <foreach item="ext" array="extArray">
+        <log expr="'I got extension:'+ext.extension"/>
+        <if cond="extList &amp;&amp; extList.length > 0">
+            <var name="extList" expr="extList + ','+ ext.extension"/>
+            <else/>
+            <var name="extList" expr="ext.extension"/>
+        </if>
+    </foreach>
+    <log expr="'I got extList:'+extList"/>
+    <say>Let us broadcast a message to the extensions ...</say>
+    <call announceOnly="true">
+        <group name="ann_group" intercom="true" callPattern="unison" memberExpr="extList"/>
+        <announcement delay="0">
+            <say>Welcome to virtual office</say>
+        </announcement>
+    </call>
+    <say>Good bye</say>
+</cpxml>

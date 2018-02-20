@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+
+    <meta name="logLevel" value="debug"/>
+    <meta name="author" value="Jason Liu"/>
+    <meta name="logLevel" value="debug"/>
+
+    <var name="record_vm_flag" expr="false"/>
+    <action id="main">
+        <say>Please wait your call will be transferred ...</say>
+        <redirectCall destination="220" fallback="#voicemail" ringTimeout="10" timeUnit="seconds"/>
+    </action>
+    <action id="voicemail">
+        <var name="record_vm_flag" expr="true"/>
+        <record name="record_vm" maxTime="20">
+            <say>Your call is not answered, please record your voice mail after the beep, and then press pound</say>
+        </record>
+    </action>
+    <action id="verify">
+        <say>Your greeting is </say>
+        <play>
+            <audio src="record_vm"/>
+        </play>
+        <getDigits name="answer1" next="#choice">
+            <say>Are you satisfied with the voicemail recording, press 1 for yes or press 2 for no</say>
+        </getDigits>
+    </action>
+    <action id="choice">
+        <if cond="answer1 == '1'">
+            <goto id="#confirm"/>
+            <elseif cond="answer1 == '2'"/>
+            <goto id="#tryAgain"/>
+            <else/>
+            <say>Invalid choice</say>
+            <goto id="#goodbye"/>
+        </if>
+    </action>
+    <action id="tryAgain">
+        <getDigits name="answer2" next="#choice2">
+            <say>Do you want to record the voicemail again? press 1 for yes or press 2 for no</say>
+        </getDigits>
+    </action>
+    <action id="choice2">
+        <if cond="answer1 == '1'">
+            <goto id="#voicemail"/>
+        <elseif cond="answer1 == '2'"/>
+            <goto id="#goodbye"/>
+        <else/>
+            <goto id="#goodbye"/>
+        </if>
+    </action>
+    <action id="goodbye">
+        <say>Thank you and good bye!</say>
+        <hangup/>
+    </action>
+    <action id="confirm">
+        <audio meta="rec_vm_meta" expr="record_vm"/>
+        <if cond="rec_vm_meta.exists">
+            <var name="dt" expr="new Date()"/>
+            <var name="dstr" expr="dt.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate()"/>
+            <var name="vm" expr="session.caller.address+'_'+session.callee.address+'_'+dt.getTime()+'.au'"/>
+
+            <!--
+            curl -X POST https://content.dropboxapi.com/2/files/upload
+            -header "Authorization: Bearer 6Ai1on3jv50AAAAAAAAUIxch4"
+            -header "Dropbox-API-Arg: {\"path\": \"/voicemail/2016-02-16/12345.au\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}"
+            -header "Content-Type: application/octet-stream"
+            -data-binary @Welcome.au
+            -->
+
+            <http name="result" url="https://content.dropboxapi.com/2/files/upload" httpMethod="POST" contentType="application/octet-stream">
+                <header name="Authorization" expr="'Bearer 6Ai1on3jv50AAAAAAAAUIxch4'"/>
+                <header name="Dropbox-API-Arg" expr="'{ &quot;path&quot;:&quot;/voicemail/'+dstr+'/'+vm+'&quot;, &quot;mode&quot;:&quot;add&quot;,&quot;autorename&quot;:true, &quot;mute&quot;:false}'"/>
+                <audio expr="record_vm"/>
+            </http>
+            <log expr="'I got result:'+JSON.stringify(result)"/>
+            <if cond="result.statusCode == '200'">
+                <say>The voice mail has been uploaded to your drop box account successfully</say>
+                <email from="zsliu@8x8.com" to="jliu@8x8.com" subjectExpr="'You have a new voice mail from '+session.caller.address +' ' +session.caller.name"
+                       msgExpr="'You have a new voice mail from:'+session.caller.address+ ' to your extension:'+session.callee.address+' in your dropbox - '+result.content.path_display"/>
+            <else/>
+                <say>Failed to upload the voice mail recording to your dropbox account</say>
+            </if>
+        </if>
+        <var name="record_vm_flag" expr="false"/>
+    </action>
+    <say>The recording task has been completed, good bye!</say>
+    <hangupHook>
+        <log expr="'I got flag record_vm:'+record_vm_flag"/>
+        <if cond="record_vm_flag">
+            <goto id="#confirm"/>
+            <else/>
+            <log expr="'No record vm need to be uploaded'"/>
+        </if>
+    </hangupHook>
+</cpxml>

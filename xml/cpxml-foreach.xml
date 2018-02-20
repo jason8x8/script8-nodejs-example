@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cpxml xmlns="http://www.8x8.com/cpxml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="customaa" version="1.0">
+	<meta name="author" value="Jason Liu"/>
+	<meta name="copyright" value="8x8 Inc"/>
+	<meta name="email" value="YOUR_EMAIL@8x8.com"/>
+	<!--
+	<script src="http://goofy.vo.dev.8x8.com:8080/mytest/common.js"/>
+	-->
+	<var name="myname" expr="'Tester123'"/>
+
+	<action id="main">
+		<assign name="name2" expr="myname"/>
+		<script><![CDATA[
+			function getPrompts() {
+				var ar = new Array();
+				ar[0] = "Here's some popular books based on movies";				
+				ar[1] = "Black hawk down";
+				ar[2] = "Saving private Ryan";
+				ar[3] = "Tora Tora Tora";
+				ar[4] = "Pearl Harbor";
+				return ar;
+			}
+		]]></script>
+		<var name="arrayOfPrompts" expr="getPrompts();"/>
+		<foreach item="book" array="arrayOfPrompts">
+			<log expr="'I got book:'+book"/>
+			<if cond="book == 'Pearl Harbor'">
+				<break/>
+			<else/>
+				<prompt>
+					<value expr="book"/>
+				</prompt>
+				<continue/>
+			</if>
+		</foreach>
+	</action>
+</cpxml>

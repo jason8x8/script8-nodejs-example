@@ -1,0 +1,107 @@
+<calendar id="myCalendar">
+    <!-- timeZoneExpr is optional. If not set, then it can use default context time zone -->
+    <schedule id="special_days_open">
+        <dateTime name="MyDay" dayOfMonth="15" month="May" year="2016">
+            <dayTime startTime="15:00" endTime="23:59" />
+        </dateTime>
+        <dateTime name="Labor Day" dayOfMonth="26" month="Feb" year="2016">
+            <dayTime startTime="06:00" endTime="23:00" />
+        </dateTime>
+        <dateTime name="Christmas Day" dayOfMonth="25" month="Dec" year="2016">
+            <dayTime startTime="08:00" endTime="22:00" />
+        </dateTime>
+        <dateTime name="Thanksgiving Day" dayOfMonth="10" month="Nov" year="2016">
+            <dayTime startTime="06:00" endTime="19:00" />
+        </dateTime>
+    </schedule>
+
+    <schedule id="special_days_close">
+        <dateTime name="OffDay" dayOfMonth="15" month="May" year="2016">
+            <!-- whole day -->
+        </dateTime>
+        <dateTime name="Afer Labor Day" dayOfMonth="27" month="Feb" year="2016">
+            <!-- whole day -->
+        </dateTime>
+        <dateTime name="Thanksgiving Day" dayOfMonth="27" month="Feb" year="2016">
+            <dayTime startTime="00:00" endTime="06:00" />
+            <dayTime startTime="19:00" endTime="23:59" />
+        </dateTime>
+    </schedule>
+
+    <schedule id="open">
+        <weekTime dayOfWeek="Mon">
+            <dayTime startTime="08:00" endTime="12:00" />
+            <dayTime startTime="14:00" endTime="23:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Tue">
+            <dayTime startTime="08:00" endTime="12:00" />
+            <dayTime startTime="14:00" endTime="23:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Wed">
+            <dayTime startTime="08:00" endTime="12:00" />
+            <dayTime startTime="14:00" endTime="23:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Thu">
+            <dayTime startTime="00:00" endTime="12:00" />
+            <dayTime startTime="13:00" endTime="23:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Fri">
+            <dayTime startTime="08:00" endTime="12:00" />
+            <dayTime startTime="14:00" endTime="23:59" />
+        </weekTime>
+        <special>
+            <dateTime name="Labor Day" dayOfMonth="14" month="May" year="2016">
+                <dayTime startTime="08:00" endTime="23:00" />
+            </dateTime>
+            <scheduleRef id="special_days_open" />
+        </special>
+        <except>
+            <scheduleRef id="special_days_close" />
+        </except>
+    </schedule>
+
+    <schedule id="close">
+        <weekTime dayOfWeek="Sat">
+            <dayTime startTime="00:00" endTime="23:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Sun">
+            <dayTime startTime="00:00" endTime="23:59" />
+        </weekTime>
+        <special>
+            <dateTime name="Labor Day" dayOfMonth="26" month="Feb" year="2016">
+                <dayTime startTime="00:00" endTime="10:00" />
+            </dateTime>
+            <scheduleRef id="special_days_close" />
+        </special>
+        <except>
+            <scheduleRef id="special_days_open" />
+        </except>
+    </schedule>
+
+    <schedule id="lunch">
+        <weekTime dayOfWeek="Mon">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Tue">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Wed">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Thu">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Fri">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Sat">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <weekTime dayOfWeek="Sun">
+            <dayTime startTime="12:00" endTime="13:59" />
+        </weekTime>
+        <except>
+            <scheduleRef id="special_days_close" />
+        </except>
+    </schedule>
+</calendar>

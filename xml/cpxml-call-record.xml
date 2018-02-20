@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <say>Your call may be recorded for quality purpose ...</say>
+    <call mode="bridge" recordOptionExpr="'always'" recordInitiatorExpr="session.call.lra">
+        <number expr="session.call.lra"/>
+        <announcement target="callee">
+            <say>Your call may be recorded</say>
+        </announcement>
+    </call>
+    <say>Thank you for using the system</say>
+</cpxml>

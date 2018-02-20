@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+
+    <action id="callScreening">
+        <call mode="confhost">
+            <ring>
+                <audio src="bach.au"/>
+            </ring>
+            <group name="team" intercom="true" callPattern="unison" >
+                <number>1020</number>
+            </group>
+            <screening expr="'((?i)accept)|(\\d+)'" speech="true" silenceTimeout="3" repeat="3" timeout="3" timeUnit="seconds">
+                <say>Say accept or press any key</say>
+                <normalization>
+                    <transform matchExpr="'(?:.*)((?i)accept|except|expect)(?:.*)'" replaceExpr="'accept'" treatment="regex" process="once"/>
+                </normalization>
+                <afterSpeech>
+                    <recognize name="confirmation" repeat="3" silenceTimeout="3" timeout="3" timeUnit="seconds" dtmfBargeIn="false">
+                        <say expr="'you said '+screening.speechResult+',  please confirm yes or no'"></say>
+                        <normalization>
+                            <transform matchExpr="'(?:.*)((?i)yes)(?:.*)'" replaceExpr="'yes'" treatment="regex" process="once"/>
+                            <transform matchExpr="'(?:.*)((?i)no)(?:.*)'" replaceExpr="'no'" treatment="regex" process="once"/>
+                        </normalization>
+                    </recognize>
+                    <acceptSpeech cond="confirmation.speechResult == 'yes'"/>
+                    <say> Let us try once more</say>
+                </afterSpeech>
+            </screening>
+        </call>
+    </action>
+    <action id="menu">
+        <menu id="mainMenu" timeout="3" repeat="3" speech="true" silenceTimeout="3">
+            <say>Say billing or press 1 for billing department, Say support or press 2 for custom support,
+                press 3 dial by name, 4 company directory, 5 previous menu
+            </say>
+            <normalization>
+                <transform matchExpr="'(?:.*)((?i)support)(?:.*)'" replaceExpr="'Support'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)sales)(?:.*)'" replaceExpr="'Sales'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)billing)(?:.*)'" replaceExpr="'Billing'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)dial by name)(?:.*)'" replaceExpr="'dialByName'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)company directory)(?:.*)'" replaceExpr="'companydirectory'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)previous)(?:.*)'" replaceExpr="'previousMenu'" treatment="regex" process="once"/>
+            </normalization>
+            <afterSpeech>
+                <recognize name="confirmation" dtmfBargeIn="false">
+                    <say expr="'you said '+menu.speechResult+',  please confirm yes or no'"></say>
+                    <normalization>
+                        <transform matchExpr="'(?:.*)((?i)yes)(?:.*)'" replaceExpr="'yes'" treatment="regex" process="once"/>
+                        <transform matchExpr="'(?:.*)((?i)no)(?:.*)'" replaceExpr="'no'" treatment="regex" process="once"/>
+                    </normalization>
+                </recognize>
+                <acceptSpeech cond="confirmation.speechResult == 'yes'"/>
+                <say> Let us try once more</say>
+            </afterSpeech>
+            <noinput>
+                <say>Sorry I do not hear from you, let us try again</say>
+            </noinput>
+            <choice option="(?i)(1|one|billing)">
+                <say>You have reach billing department</say>
+            </choice>
+            <choice option="(?i)(2|two|support)">
+                <say>You have reach billing department</say>
+            </choice>
+            <choice option="(?i)(3|dialByName)">
+                <say>You have reach dial by name</say>
+                <dialByName/>
+            </choice>
+            <choice option="(?i)(4|companyDirectory)">
+                <say>You have reach company directory</say>
+                <companyDirectory/>
+            </choice>
+            <choice option="(?i)(5|previousMenu)">
+                <say>You have reach previous menu</say>
+                <previous/>
+            </choice>
+
+            <default>
+                <say>Thank you and good bye</say>
+                <hangup/>
+            </default>
+        </menu>
+    </action>
+
+    <action id="main">
+        <recognize name="result" timeout="5" silenceTimeout="4">
+            <say>To reach support deparment please say support or press one , .... to reach sales department please say
+                sales or press 2...
+            </say>
+            <normalization>
+                <transform matchExpr="'(.*)(\\d)(.*)'" replaceExpr="'$1 $2 $3'" treatment="regex" process="continuous"/>
+                <transform matchExpr="'(?:.*)((?i)support)(?:.*)'" replaceExpr="'$1-agent'" treatment="regex" process="once"/>
+                <transform matchExpr="'(?:.*)((?i)sales)(?:.*)'" replaceExpr="'$1-agent'" treatment="regex" process="once"/>
+            </normalization>
+        </recognize>
+        <if cond="result.dtmfResult &amp;&amp; result.dtmfResult.length > 0">
+            <say expr="'I got DTMF result '+result.dtmfResult"/>
+            <else/>
+            <say expr="'I got speech result '+result.speechResult"/>
+        </if>
+        <if cond="result.speechResult.match(new RegExp('sales-agent', 'ig')) || result.speechResult.match(new RegExp('support-agent', 'ig'))">
+            <say>I got the right result</say>
+            <else/>
+            <say>I do not understand, let us try again ....</say>
+            <goto id="#main"/>
+        </if>
+    </action>
+    <say>Good bye</say>
+    <hangup/>
+</cpxml>

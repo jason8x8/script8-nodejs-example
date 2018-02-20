@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+
+    <action id="sms">
+        <!--
+        <message msgExpr="'HelloWorld'" toExpr="'14086540972'" fromExpr="'14085325277'"/>
+        -->
+        <message msgExpr="'HelloWorld'" toExpr="'14086540972'"/>
+    </action>
+
+</cpxml>

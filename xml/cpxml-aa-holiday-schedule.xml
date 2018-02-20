@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE doc [
+        <!ENTITY schedules SYSTEM "./src/test/resources/schedule_1515084443675.xml">
+        ]>
+<cpxml xmlns="http://www.8x8.com/cpxml" format="generated" lang="en-US" name="AA_pauls" timeZone="US/Pacific">
+    <query criteriaExpr="'block'+session.call.targetAddress" limit="1" name="q_override_route_result" object="override_route" type="properties" />
+    <var name="q_override_route_result" expr="'false'"/>
+    <if cond="q_override_route_result=='true'">
+        <menu allowDirectExtCall="false" branchId="ALL" id="CP_0_2" numOfRetries="1" timeout="3">
+            <hangup />
+        </menu>
+     <else />
+        <menu allowDirectExtCall="false" branchId="ALL" id="CP_0_90001" numOfRetries="1" timeout="3">
+            <say lang="en-US">holiday closed</say>
+            <choice option="0">
+                <transfer destination="500" />
+            </choice>
+            <choice option="1">
+                <repeat />
+            </choice>
+            <choice option="2">
+                <transfer destination="123456789011" />
+            </choice>
+            <hangup />
+            <scheduleRef id="schedule_1515084443675.holiday_close" />
+        </menu>
+        <menu allowDirectExtCall="false" branchId="ALL" id="CP_0_90000" numOfRetries="1" timeout="3">
+            <say lang="en-US">holiday open</say>
+            <choice option="0">
+                <menu allowDirectExtCall="false" branchId="ALL" id="CP_1_90000_0" numOfRetries="1" timeout="3">
+                    <say lang="en-US">sub</say>
+                    <choice option="0">
+                        <menu allowDirectExtCall="false" branchId="ALL" id="CP_2_90000_0_0" numOfRetries="1" timeout="3">
+                            <say lang="en-US">another sub</say>
+                            <hangup />
+                        </menu>
+                    </choice>
+                    <hangup />
+                </menu>
+            </choice>
+            <choice option="1">
+                <transfer destination="500" />
+            </choice>
+            <hangup />
+            <scheduleRef id="schedule_1515084443675.holiday_open" />
+        </menu>
+        <menu allowDirectExtCall="false" branchId="ALL" id="CP_0_1" numOfRetries="1" timeout="3">
+            <audio meta="audio_audio_0010x000003nu50AAA_1515060621303" src="audio_0010x000003nu50AAA_1515060621303" />
+            <if cond="audio_audio_0010x000003nu50AAA_1515060621303.exists">
+                <play>
+                    <audio src="audio_0010x000003nu50AAA_1515060621303" />
+                </play>
+            </if>
+            <choice option="0">
+                <transfer destination="500" />
+            </choice>
+            <choice option="1">
+                <repeat />
+            </choice>
+            <choice option="2">
+                <transfer destination="123456789011" />
+            </choice>
+            <hangup />
+            <scheduleRef id="schedule_1515084443675.close" />
+        </menu>
+        <menu allowDirectExtCall="false" branchId="ALL" id="CP_0_0" numOfRetries="1" timeout="3">
+            <say lang="en-US">open</say>
+            <choice option="0">
+                <menu allowDirectExtCall="false" branchId="ALL" id="CP_1_0_0" numOfRetries="1" timeout="3">
+                    <say lang="en-US">sub</say>
+                    <choice option="0">
+                        <menu allowDirectExtCall="false" branchId="ALL" id="CP_2_0_0_0" numOfRetries="1" timeout="3">
+                            <say lang="en-US">another sub</say>
+                            <hangup />
+                        </menu>
+                    </choice>
+                    <hangup />
+                </menu>
+            </choice>
+            <choice option="1">
+                <transfer destination="500" />
+            </choice>
+            <hangup />
+            <scheduleRef id="schedule_1515084443675.open" />
+        </menu>
+
+    </if>
+    &schedules;
+</cpxml>

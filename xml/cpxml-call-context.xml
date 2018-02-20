@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <say>Hello World</say>
+    <var name="test" expr="{'a':'1234', b:1000}"/>
+
+    <callContext name="myvar" expr="test"/>
+
+</cpxml>

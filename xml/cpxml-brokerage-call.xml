@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+
+    <say>Hello, your call will be connected</say>
+
+    <call mode="bridge" callerIdExpr="session.callee.dnis" callerNameExpr="'CompanyABC'" followForwardRule="false">
+        <number expr="'14086540972'" ringTimeout="20"/>
+        <!--
+        <group name="team" callPattern="unison">
+            <number expr="'14086540973'"/>
+            <number expr="'14086540972'"/>
+        </group>
+        -->
+    </call>
+    <hangupHook>
+        <log expr="'I am in hangup hook now'"/>
+    </hangupHook>
+</cpxml>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml name="customObject" xmlns="http://www.8x8.com/cpxml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       version="1.0">
+    <meta name="author" value="Jason Liu"/>
+    <meta name="copyright" value="8x8 Inc"/>
+    <meta name="email" value="jliu@8x8.com"/>
+    <meta name="logLevel" value="debug"/>
+    <meta name="remoteLogger" value="/logger"/>
+
+    <script>
+        <![CDATA[
+            function getNPA( address) {
+                var npa = address.length > 4 ?  address.substr(0,4) : address;
+                return npa;
+             }
+            function isNANPE164 ( address) {
+                if(address && address.startsWith("1") && address.length === 11) {
+                        return true;
+                } else {
+                        return false;
+                }
+            }
+        ]]>
+    </script>
+
+    <action id="query">
+        <if cond="isNANPE164(session.caller.address)">
+            <log expr="'I got session:'+JSON.stringify(session)"/>
+            <query name="q_result" object="npa_routes" type="dfservice" limit="1">
+                <filter>
+                    <expression attrExpr="'npa'" operator="eq" valueExpr="getNPA(session.caller.address)"/>
+                </filter>
+            </query>
+            <log expr="'I got q_result:'+JSON.stringify(q_result)"/>
+
+            <if cond="q_result.resource.length === 0">
+                <say expr="'Welcome to main office'"/>
+                <else/>
+                <say expr="'Welcome to '+ q_result.resource[0].branch+' office'"/>
+            </if>
+        </if>
+    </action>
+    <action id="shift_checkin">
+        <menu id="store">
+            <say>Let us update your availability in our system. Please press 1 to check in, or press 2 to checkout from
+                our system
+            </say>
+            <choice option="1">
+                <log expr="'option 1 is selected...'"/>
+                <store name="test1" object="work_shift" ops="auto" type="dfservice">
+                    <attribute name="number" expr="session.caller.address" key="true"/>
+                    <attribute name="name" expr="session.caller.name === null ? '' : session.caller.name"/>
+                    <attribute name="status" expr="'checkin'"/>
+                </store>
+                <message toExpr="session.caller.address" msgExpr="'You have been checked in for on call status'"/>
+                <say>You have been checked in for on call and a message has been sent to your number for confirmation
+                </say>
+            </choice>
+            <choice option="2">
+                <log expr="'option 2 is selected...'"/>
+                <store name="test1" object="work_shift" ops="auto" type="dfservice">
+                    <attribute name="number" expr="session.caller.address" key="true"/>
+                    <attribute name="name" expr="session.caller.name === null ? '' : session.caller.name"/>
+                    <attribute name="status" expr="'checkout'"/>
+                </store>
+                <message toExpr="session.caller.address" msgExpr="'You have been checkout from on call status'"/>
+                <say>You have been checkout from on call status and a message has been sent to your number for
+                    confirmation
+                </say>
+                <!-- application -->
+            </choice>
+            <default>
+                <log expr="'default option is selected...'"/>
+                <!-- default -->
+            </default>
+        </menu>
+    </action>
+    <action id="goodbye">
+        <say>Thank you using virtual office and good bye</say>
+    </action>
+</cpxml>

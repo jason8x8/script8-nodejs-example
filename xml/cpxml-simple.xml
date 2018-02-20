@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+	<meta name="author" value="Jason Liu" />
+	<meta name="copyright" value="8x8 Inc" />
+	<meta name="email" value="jliu@8x8.com" />
+	<meta name="logLevel" value="debug" />
+
+	<init>
+		<var name="test" expr="'123'"/>
+	</init>
+
+	<log expr="'I got emergency call'"/>
+	<log expr="'I got test result'+test"/>
+
+	<say>HelloWorld </say>
+	<action id="main">
+		<assign name="name2" expr="'2222'"/>
+		<script><![CDATA[
+			function getPrompts() {
+				var ar = new Array();
+				ar[0] = "Here's some popular books based on movies";
+				ar[1] = "Black hawk down";
+				ar[2] = "Saving private Ryan";
+				ar[3] = "Tora Tora Tora";
+				ar[4] = "Pearl Harbor";
+				return ar;
+			}
+		]]></script>
+		<var name="arrayOfPrompts" expr="getPrompts();"/>
+
+		<log>Here you go</log>
+		<var name="ani" expr="session.caller.address" />
+		<log expr="'ANI = '+ani"/>
+		<var name="RFound" expr="'false'"/>
+		<foreach item="book" array="arrayOfPrompts">
+			<log expr="'I got book:'+book"/>
+			<if cond="book == 'Pearl Harbor'">
+				<break/>
+				<else/>
+				<prompt>
+					<value expr="book"/>
+				</prompt>
+				<continue/>
+			</if>
+		</foreach>
+
+		<if cond="RFound == 'false'">
+			<log expr="'I found false'"/>
+		</if>
+	</action>
+	<!--
+	<redirectCall destination="+33112" callerIdExpr="'+33186289200'" callerNameExpr="'Zebra Sacley'" primaryDidExpr="'33186289200'"/>
+	-->
+</cpxml>

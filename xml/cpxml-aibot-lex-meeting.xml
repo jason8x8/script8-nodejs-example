@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+
+    <init>
+        <var name="test" expr="'123'"/>
+    </init>
+    <log expr="'I got session:'+JSON.stringify(session)"/>
+    <!--
+    <context>
+       <attribute name="awsAccessKey" expr="'AAA'"/>
+       <attribute name="awsSecretKey" expr="'BBB'"/>
+       <attribute name="awsRegion" expr="'us-east-1'"/>
+    </context>
+    -->
+    <aibot id="main" result="meeting" type="dialogflow" timeout="4" timeUnit="seconds">
+        <param name="awsLexBotName" expr="'meetingAgent'"/>
+        <param name="awsLexBotAlias" expr="'meetingAgentAlias'"/>
+        <!--
+        <param name="dfAccessToken" expr="'8d37587af4654313878bee63e92cff2c'"/>
+        -->
+        <say>
+            There are multiple meetings scheduled for the moment,
+            executive meeting, sales meeting, or marketing meeting,
+            which meeting would you like to join?
+        </say>
+    </aibot>
+
+    <log expr="'I got meeting result:'+JSON.stringify(meeting)"/>
+    <if cond="meeting.readyFulfillment">
+        <aibot result="yesno" type="dialogflow" timeout="4" timeUnit="seconds">
+            <param name="awsLexBotName" expr="'PinCodeYesNo'"/>
+            <param name="awsLexBotAlias" expr="'YesnoAlias'"/>
+            <!--
+            <param name="dfAccessToken" expr="'8d37587af4654313878bee63e92cff2c'"/>
+           -->
+            <param name="sessionId" expr="meeting.sessionId ? meeting.sessionId : ''"/>
+            <say expr="'You select '+meeting.slots.choice+' meeting, Is this correct?'"/>
+        </aibot>
+        <say expr="'I got answer:'+yesno.slots.answer"/>
+        <if cond="!yesno.readyFulfillment || yesno.slots.answer !== 'yes'">
+            <say> Let us try again ...</say>
+            <goto id="#main"/>
+        </if>
+        <!--
+        <recognize name="yesno" timeout="3" silenceTimeout="3">
+           <say expr="'You select '+meeting.slots.choice+' meeting, Is this right, please say yes or no?'"/>
+           <normalization>
+               <transform matchExpr="'(?:.*)((?i)yes)(?:.*)'" replaceExpr="'$1'" treatment="regex" process="once"/>
+               <transform matchExpr="'(?:.*)((?i)no)(?:.*)'" replaceExpr="'$1'" treatment="regex" process="once"/>
+           </normalization>
+        </recognize>
+        <say expr="'I got answer:'+yesno.speechResult"/>
+        <if cond="yesno.speechResult &amp;&amp; yesno.speechResult.toLowerCase() !== 'yes'">
+              <say> Let us try again ...</say>
+              <goto id="#main"/>
+        </if>
+        -->
+        <say expr="'You are connecting to '+meeting.slots.choice+ ' meeting now'"/>
+        <joinConference expr="meeting.slots.choice">
+            <onSoloParticipant minLoopInterval="4000">
+                <say expr="'you are the only one in '+meeting.slots.choice+' meeting right now, please enjoy the music while waiting...'"/>
+                <play maxTime="10" timeUnit="seconds">
+                    <audio src="bach.au"/>
+                </play>
+            </onSoloParticipant>
+        </joinConference>
+        <else/>
+        <say>I do not understand, Thank you and good bye</say>
+    </if>
+</cpxml>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="info" />
+
+    <play expr="'https://test-jliu0120.c9.io/music/0967.aiff'" maxTime="5" cache="true" ttl="3600"/>
+    <play expr="'https://test-jliu0120.c9.io/music/0957.ogg'" maxTime="5" cache="true" ttl="3600"/>
+
+    <play nameExpr="'my_0_wav'" expr="'https://test-jliu0120.c9.io/music/Roland-JV-2080-Pick-Bass-C2.wav'" maxTime="5" cache="true" ttl="3600"/>
+    <play nameExpr="'my_1_mp3'" expr="'https://test-jliu0120.c9.io/music/SampleAudio_0.4mb.mp3'" maxTime="5" cache="true" ttl="3600"/>
+    <play nameExpr="'my_music'" expr="'https://test-jliu0120.c9.io/music/classic.au'" maxTime="5" cache="true" ttl="3600"/>
+
+    <say>Thank you using Script8 service, and good bye</say>
+
+</cpxml>

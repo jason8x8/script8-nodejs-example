@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="info" />
+
+    <!--
+    applicationJSON call context attribute passed in through CTI/MakeCall
+    {
+       "_callOptions":{
+           "destination": "14086540972"
+          "callScreening":false,
+          "playWelcome":false,
+           "silenceDetection": true,
+           "silenceDuration":1000
+       },
+       "appData":{
+          "mdn":"12345678",
+          "appointmentId":"22222",
+          "message":"Jason Liu, you have an appointment on December 12th morning 10 30, ,,,,,, at pleasanton,,,,, south building,, second floor with doctor James ",
+          "method":"voice"
+       }
+    }
+    -->
+    <callContext name="applicationJSON"/>
+
+    <log expr="'I got attribute:'+applicationJSON"/>
+    <if cond="applicationJSON">
+        <var name="callData" expr="JSON.parse(applicationJSON)"/>
+        <log expr="'I got callData:'+JSON.stringify(callData)"/>
+        <getDigits name="my_digits" next="#choice">
+            <say expr="callData.appData.message"></say>
+            <say>Press 1 to confirm the appointment, press 2 to cancel the appointment </say>
+        </getDigits>
+        <else/>
+        <goto id="#goodbye"/>
+    </if>
+    <action id="choice">
+        <log expr="'You have entered '+my_digits" />
+        <if cond="my_digits == '1'">
+            <data name="appointment" expr="'http://api.kaiser.com/kp/'+callData.appData.mdn+'/appointment/'+callData.appData.appointmentId">
+                <param name="action" expr="'confirm'" />
+            </data>
+            <say>Your appointment is confirmed</say>
+            <else/>
+            <data name="appointment" expr="'http://api.kaiser.com/kp/'+callData.appData.mdn+'/appointment/'+callData.appData.appointmentId">
+                <param name="action" expr="'cancel'" />
+            </data>
+            <say>Your appointment is cancelled</say>
+        </if>
+    </action>
+    <action id="goodbye">
+        <say>Thank you and good bye</say>
+        <hangup/>
+    </action>
+</cpxml>

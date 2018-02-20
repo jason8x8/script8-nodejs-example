@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml name="customObject" xmlns="http://www.8x8.com/cpxml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+    <meta name="remoteLogger" value="/logger" />
+
+    <!-- custom object -->
+    <action id="store">
+        <store name="s_result" object="script8_obj1" serviceExpr="'script8db'" ops="auto" type="dfservice">
+            <attribute name="id" expr="'9999'" key="true"/>
+            <attribute name="npa" expr="'1627'" key="true"/>
+            <attribute name="nxx" expr="'162700012222'"/>
+        </store>
+        <store name="s_result" object="script8_obj1" ops="auto" type="dfservice">
+            <attribute name="id" expr="'9998'" key="true"/>
+            <attribute name="npa" expr="'1626'" key="true"/>
+            <attribute name="nxx" expr="'162600012222'"/>
+        </store>
+    </action>
+    <action id="query1">
+        <query name="q_result" object="script8_obj1" serviceExpr="'script8db'" type="dfservice" criteriaExpr="'(npa=1627) or (npa=1626)'" orderExpr="'nxx desc'" limit="10" />
+        <log expr="'I got q_result:'+JSON.stringify(q_result)" />
+    </action>
+    <action id="query2">
+        <query name="q_result" object="script8_obj1" type="dfservice" orderExpr="'nxx desc'" limit="10">
+            <filter type="or">
+                <filter type="and">
+                    <expression attrExpr="'npa'" operator="eq" valueExpr="'1408'"/>
+                    <expression attrExpr="'nxx'" operator="eq" valueExpr="'14086540972'"/>
+                </filter>
+                <expression attrExpr="'nxx'" operator="eq" valueExpr="'1408333333'"/>
+                <filter type="and">
+                    <expression attrExpr="'npa'" operator="ne" valueExpr="'1626'"/>
+                    <expression attrExpr="'nxx'" operator="eq" valueExpr="'162600012222'"/>
+                </filter>
+            </filter>
+        </query>
+        <log expr="'I got q_result:'+JSON.stringify(q_result)" />
+    </action>
+    <action id="delete">
+        <store name="s_result" object="script8_obj1" ops="delete" type="dfservice">
+            <attribute name="npa" expr="'1627'" key="true"/>
+        </store>
+        <store name="s_result" object="script8_obj1" ops="delete" type="dfservice">
+            <attribute name="npa" expr="'1333'" key="true"/>
+        </store>
+    </action>
+</cpxml>

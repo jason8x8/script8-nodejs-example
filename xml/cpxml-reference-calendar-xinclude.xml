@@ -1,0 +1,23 @@
+<cpxml xmlns="http://www.8x8.com/cpxml" xmlns:xi="http://www.w3.org/2001/XInclude" name="example" version="1.0">
+    <var name="ext" tclExpr="'getExtensionInfo -extension '+session.callee.address"/>
+    <!-- set time zone variable which is used by calendar/schedules-->
+    <context>
+        <attribute name="timeZone" expr="ext.localTimeZone"/>
+        <attribute name="timeZone" expr="'en-US'"/>
+    </context>
+
+    <!-- reference calendar xml with relative path-->
+    <xi:include href="./src/test/resources/calendar1.xml" parse="xml"/>
+    <!-- reference calendar xml with URL path -->
+    <xi:include href="https://test-jliu0120.c9.io/xml/calendar2.xml" parse="xml"/>
+
+    <menu id="main">
+        <say id="welcome" expr="'Welcome to 8x8'"/>
+        <default>
+
+            <say id="TTT">Thank you</say>
+
+        </default>
+        <scheduleRef expr="'myCalendar.open'"/>
+    </menu>
+</cpxml>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE doc [
+        <!ENTITY schedules SYSTEM "./voiceapps/attendant/calendar.xml">
+        ]>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="AACustom1" timeZone="US/Pacific" format="generated">
+    <var name="ext" tclExpr="'getExtensionInfo -extension '+session.callee.address"/>
+    <!-- set time zone variable which is used by calendar/schedules-->
+    <context>
+        <attribute name="timeZone" expr="ext.localTimeZone"/>
+        <attribute name="language" expr="'en-US'"/>
+    </context>
+
+
+    <menu id="8000">
+        <audio meta="audio_AA_8000" src="AA_8000"/>
+        <if cond="audio_AA_8000.exists">
+            <play>
+                <audio src="AA_8000"/>
+            </play>
+            <else/>
+            <say>This is eight by eight office is in holiday, Thank you and good bye!</say>
+        </if>
+        <hangup/>
+        <!-- schedule reference -->
+        <scheduleRef id="myCalendar.special_days_close"/>
+    </menu>
+    <menu id="6000">
+        <audio meta="audio_AA_6000" src="AA_6000"/>
+        <if cond="audio_AA_6000.exists">
+            <play>
+                <audio src="AA_6000"/>
+            </play>
+            <else/>
+            <say>This is eight by eight business hour, Thank you and good bye</say>
+        </if>
+        <hangup/>
+        <scheduleRef id="myCalendar.open"/>
+    </menu>
+    <menu id="5000">
+
+        <audio meta="audio_AA_5000" src="AA_5000"/>
+        <if cond="audio_AA_5000.exists">
+            <play>
+                <audio src="AA_5000"/>
+            </play>
+            <else/>
+            <say>Our office is in closed during non business hour</say>
+        </if>
+        <hangup/>
+        <scheduleRef id="myCalendar.close"/>
+    </menu>
+    <menu id="3000" timeout="1" numOfRetries="3" allowDirectExtCall="true">
+        <audio meta="audio_AA_3000" src="AA_3000"/>
+        <if cond="audio_AA_3000.exists">
+            <play>
+                <audio src="AA_3000"/>
+            </play>
+            <else/>
+            <say>Test schedule time press 1 for customer service, press 2 for voice mail</say>
+        </if>
+        <choice option="1">
+            <menu id="3001">
+                <!--Press 1 for jason, Press 2 for eric Press 3 goto previous Menu -->
+
+                <audio meta="audio_AA_3001" src="AA_3001"/>
+                <if cond="audio_AA_3001.exists">
+                    <play>
+                        <audio src="AA_3001"/>
+                    </play>
+                    <else/>
+                    <say>Press 1 for jason, Press 2 for eric Press 3 goto previous Menu</say>
+                </if>
+                <choice option="1">
+                    <transfer destination="914089921686"/>
+                </choice>
+                <choice option="2">
+                    <transfer destination="102"/>
+                </choice>
+                <choice option="3">
+                    <previous/>
+                </choice>
+            </menu>
+        </choice>
+        <choice option="2">
+            <transfer destination="102" voiceMail="true"/>
+        </choice>
+        <choice option="3">
+            <dialByName/>
+        </choice>
+        <choice option="4">
+            <companyDirectory/>
+        </choice>
+        <choice option="6">
+            <companyDirectory/>
+        </choice>
+        <choice option="5">
+            <previous/>
+        </choice>
+        <default>
+            <transfer destination="100"/>
+            <hangup/>
+        </default>
+        <!-- embeded schedule -->
+        <schedule id="sch_3000">
+            <weekTime dayOfWeek="Monday">
+                <dayTime startTime="08:00" endTime="12:00"/>
+                <dayTime startTime="12:00" endTime="18:00"/>
+            </weekTime>
+            <weekTime dayOfWeek="Tuesday">
+                <dayTime startTime="08:00" endTime="13:00"/>
+                <dayTime startTime="13:00" endTime="18:00"/>
+                <dayTime startTime="12:00" endTime="18:00"/>
+                <dayTime startTime="12:00" endTime="18:00"/>
+            </weekTime>
+            <weekTime dayOfWeek="Wednesday">
+                <dayTime startTime="08:00" endTime="18:00"/>
+            </weekTime>
+            <weekTime dayOfWeek="Thursday">
+                <dayTime startTime="08:00" endTime="18:00"/>
+            </weekTime>
+            <weekTime dayOfWeek="Friday">
+                <dayTime startTime="08:00" endTime="18:00"/>
+            </weekTime>
+        </schedule>
+    </menu>
+    &schedules;
+</cpxml>

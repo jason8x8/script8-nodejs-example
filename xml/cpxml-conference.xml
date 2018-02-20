@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+	<meta name="author" value="Jason Liu" />
+	<meta name="copyright" value="8x8 Inc" />
+	<meta name="email" value="jliu@8x8.com" />
+	<meta name="logLevel" value="debug" />
+
+	<if cond="session.call.lra">
+		<var name="confName" expr="session.call.lra"/>
+	<else/>
+		<var name="confName" expr="session.caller.adddress"/>
+	</if>
+	<joinConference expr="confName">
+		<!--
+		<onSoloParticipant minLoopInterval="4000">
+			<say>Hello you are the only one in the conference now, please enjoy the music while waiting...</say>
+			<play maxTime="10" timeUnit="seconds">
+				<audio src="bach.au"/>
+			</play>
+		</onSoloParticipant>
+
+		<onEnterConference>
+			<notification expr="'http://httpbin.org/post'" httpMethod="POST" contentType="application/json">
+				<param name="dt" body="false" expr="new Date().toDateString()"/>
+				<header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+				<param name="grant_type" body="true" expr="'client_credentials'"/>
+				<body expr="makeOptions()"/>
+			</notification>
+		</onEnterConference>
+
+		<onLeaveConference>
+			<next expr="'#LeaveConference'"/>
+		</onLeaveConference>
+		-->
+	</joinConference>
+
+	<action id="LeaveConference">
+		<say>Thank you for using 8x8 office</say>
+	</action>
+</cpxml>
+

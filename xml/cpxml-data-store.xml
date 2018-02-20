@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="TrueBlue Branch NPA Routing" version="1.0">
+
+    <meta name="author" value="Jason Liu"/>
+    <meta name="copyright" value="8x8 Inc"/>
+    <meta name="email" value="jliu@8x8.com"/>
+    <meta name="logLevel" value="debug"/>
+
+
+    <action id="main">
+        <!--
+        CREATE TABLE `t_newiepbx8x8_oncall_group` (
+            `workerId` INT NOT NULL auto_increment,
+            `branchId` varchar(32) NOT NULL,
+            `workerName` varchar(32) NULL,
+            `workerNumber` varchar(32) NOT NULL,
+            `smsNotif` varchar(10) NOT NULL,
+            `callNotif` varchar(10) NOT NULL,
+            `emailNotif` varchar(10) NOT NULL,
+            `emailAddress` varchar(64) NULL,
+            `onCall` varchar(20) NULL,
+            PRIMARY KEY (`workerId`)
+            ) ENGINE=InnoDB;
+
+        insert into t_newiepbx8x8_oncall_group (branchId, workerName, workerNumber, smsNotif, callNotif, emailNotif,emailAddress, onCall)
+            values ('8883338888', 'Jason Liu', '14086540972', 'true', 'true', 'true', 'jliu@8x8.com', 'true');
+        insert into t_newiepbx8x8_oncall_group (branchId, workerName, workerNumber, smsNotif, callNotif, emailNotif,emailAddress, onCall)
+            values ('8883338888', 'Robin', '16693330784', 'true', 'true', 'true', 'robin.alkein@8x8.com', 'true');
+        insert into t_newiepbx8x8_oncall_group (branchId, workerName, workerNumber, smsNotif, callNotif, emailNotif,emailAddress, onCall)
+            values ('8883338889','Peter Nees','14086927158','true','true','true','pnees@8x8.com','true');
+
+        -->
+        <!-- availability -->
+        <menu id="application_submenu">
+            <say>Let us update your availability in our system. Please press 1 for check in for on call, or press 2 for
+                checkout from on call
+            </say>
+            <choice option="1">
+                <log expr="'option 1 is selected...'"/>
+                <store name="test1" object="oncall_group" ops="auto" type="mysql">
+                    <attribute name="workerNumber" expr="session.caller.address" key="true"/>
+                    <attribute name="branchId" expr="branchInfo.id" key="true"/>
+                    <attribute name="onCall" expr="'true'"/>
+                </store>
+                <message toExpr="session.caller.address" msgExpr="'You have been checked in for on call status'"/>
+                <say>You have been checked in for on call and a message has been sent to your number for confirmation
+                </say>
+            </choice>
+            <choice option="2">
+                <log expr="'option 2 is selected...'"/>
+                <store name="test1" object="oncall_group" ops="auto" type="mysql">
+                    <attribute name="workerNumber" expr="session.caller.address" key="true"/>
+                    <attribute name="branchId" expr="branchInfo.id" key="true"/>
+                    <attribute name="onCall" expr="'true'"/>
+                </store>
+                <message toExpr="session.caller.address" msgExpr="'You have been checkout from on call status'"/>
+                <say>You have been checkout from on call status and a message has been sent to your number for
+                    confirmation
+                </say>
+            </choice>
+            <default>
+                <log expr="'default option is selected...'"/>
+                <!-- default -->
+            </default>
+        </menu>
+    </action>
+</cpxml>

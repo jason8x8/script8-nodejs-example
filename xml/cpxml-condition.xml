@@ -1,0 +1,31 @@
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <meta name="author" value="Jason Liu" />
+    <meta name="copyright" value="8x8 Inc" />
+    <meta name="email" value="jliu@8x8.com" />
+    <meta name="logLevel" value="debug" />
+
+    <condition rules="any">
+        <rule cond="session.callee.dnis &amp;&amp; session.callee.dnis.match('^\\+?1510.+')"/>
+        <schedule id="sch001" timeZone="US/Pacific">
+            <weekTime dayOfWeek="Sunday">
+                <dayTime endTime="12:00" startTime="08:00"/>
+                <dayTime endTime="23:59" startTime="00:00"/>
+            </weekTime>
+        </schedule>
+        <action>
+            <call next="#goodbye">
+                <ring>
+                    <audio src="bach"/>
+                </ring>
+                <group callPattern="unison" name="test" ringTimeout="15">
+                    <number>+14086540972</number>
+                    <number ringTimeout="15">1001</number>
+                </group>
+            </call>
+        </action>
+    </condition>
+    <action id="goodbye">
+        <say>Good Bye</say>
+        <hangup/>
+    </action>
+</cpxml>

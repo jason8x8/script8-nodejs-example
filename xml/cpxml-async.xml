@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+	<script>
+		<![CDATA[
+		    function hello() {
+                setTimeout(function () {console.log("hello"); },1000);
+            }
+            function makeQueryParams() {
+                 return "lorem=ipsum&name=binny";
+            }
+            function makeJSON() {
+                 return '{"firstName":"Jason", "lastName":"Liu"}';
+            }
+            function testAsyncHttpGet(url, params) {
+                var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function() {
+					console.log("here you go state:"+this.readyState+ " status:"+this.status+" const:"+XMLHttpRequest.DONE);
+					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+						  // Action to be performed when the document is read;
+						response = this.responseText;
+						console.log("I got response:"+response);
+					}
+				}
+				xhttp.open('GET',url, true);
+				xhttp.send(params);
+				return xhttp;
+            }
+             function testAsyncHttpPost(url,params) {
+                var xhttp = new XMLHttpRequest();
+
+				xhttp.onreadystatechange = function() {
+					console.log("here you go state:"+this.readyState+ " status:"+this.status+" const:"+XMLHttpRequest.DONE);
+					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
+						// Action to be performed when the document is read;
+						response = this.responseText;
+						console.log("I got response:"+response);
+					}
+				}
+
+				//Send the proper header information along with the request
+				//xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhttp.setRequestHeader("Content-type", "application/json");
+				xhttp.open('POST',url, true);
+				xhttp.send(params);
+				return xhttp;
+            }
+        ]]>
+	</script>
+	<action id="get">
+		<var name="response" expr="''"/>
+		<var name="url" expr="'http://httpbin.org/get'"/>
+		<var name="xhr" expr="testAsyncHttpGet(url,makeQueryParams())"/>
+		<pause time="3000" timeUnit="milliseconds"/>
+
+		<log expr="'I got GET resp:'+response"/>
+	</action>
+	<action id="post">
+		<var name="response" expr="''"/>
+		<var name="url" expr="'http://httpbin.org/post'"/>
+		<var name="xhr" expr="testAsyncHttpPost(url, makeJSON())"/>
+		<pause time="3000" timeUnit="milliseconds"/>
+
+		<log expr="'I got POST resp:'+response"/>
+		<!--
+		<waitStart time="3000"/>
+		-->
+	</action>
+</cpxml>
