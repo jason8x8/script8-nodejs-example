@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var app = express();
@@ -9,6 +10,8 @@ app.use(basicAuth('admin', 'password'));
 
 app.use('/music', express.static("./music"));
 app.use('/xml', express.static("./xml"));
+
+app.use(bodyParser.json());
 
 // app router
 app.post('/', main);
