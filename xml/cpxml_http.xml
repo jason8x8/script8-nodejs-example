@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cpxml xmlns="http://www.8x8.com/cpxml" name="example" version="1.0">
+    <script>
+        <![CDATA[
+            function makeOptions() {
+                return '{"appData" : {"test" : "12234444"}}';
+            }
+        ]]>
+    </script>
+    <!--
+    <action id="get-basic-auth-scheme">
+        <http name="getResp" url="https://admin:password@test-jliu0120.c9users.io/" httpMethod="GET" authScheme="basic">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    -->
+    <action id="get">
+        <http name="getResp" url="http://httpbin.org/get" httpMethod="GET">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    <action id="get2">
+        <http name="getResp" url="http://httpbin.org/get/" httpMethod="GET">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    <action id="get-basic-auth">
+        <http name="getResp" url="http://user:passwd@httpbin.org/basic-auth/user/passwd" httpMethod="GET">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    <action id="get-basic-auth-scheme">
+        <http name="getResp" url="http://user:passwd@httpbin.org/basic-auth/user/passwd" httpMethod="GET" authScheme="basic">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    <action id="get-digest-auth-scheme">
+        <http name="getResp" url="http://httpbin.org/digest-auth/auth/user/passwd/MD5" httpMethod="GET" authScheme="digest" authUser="user" authPassword="passwd">
+            <param name="dt" expr="new Date().toDateString()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(getResp)"/>
+    </action>
+    <action id="post">
+        <http name="resp" url="http://httpbin.org/post" httpMethod="POST" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="post-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/basic-auth/user/passwd" httpMethod="POST" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <!--
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            -->
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="post-digest-auth">
+        <http name="resp" url="http://httpbin.org/digest-auth/user/passwd/MD5" httpMethod="POST" contentType="application/json" authScheme="digest" authUser="user" authPassword="passwd">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <!--
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            -->
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="put">
+        <http name="resp" url="http://httpbin.org/put" httpMethod="PUT" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+
+    <action id="put-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/put" httpMethod="PUT" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <!--
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            -->
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+
+    <action id="patch">
+        <http name="resp" url="http://httpbin.org/patch" httpMethod="PATCH" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="patch-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/patch" httpMethod="PATCH" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+            <body expr="makeOptions()"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="delete">
+        <http name="resp" url="http://httpbin.org/delete" httpMethod="DELETE" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="delete-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/delete" httpMethod="DELETE" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="head">
+        <http name="resp" url="http://httpbin.org/head" httpMethod="HEAD" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="head-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/head" httpMethod="HEAD" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="options">
+        <http name="resp" url="http://httpbin.org/options" httpMethod="OPTIONS" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+    <action id="options-basic-auth">
+        <http name="resp" url="http://user:passwd@httpbin.org/options" httpMethod="OPTIONS" contentType="application/json">
+            <param name="dt" body="false" expr="new Date().toDateString()"/>
+            <param name="grant_type" body="true" expr="'client_credentials'"/>
+        </http>
+        <log expr="'I got resp:'+JSON.stringify(resp)"/>
+    </action>
+</cpxml>
