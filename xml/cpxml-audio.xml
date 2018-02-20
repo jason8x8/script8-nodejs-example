@@ -3,7 +3,7 @@
     <meta name="author" value="Jason Liu" />
     <meta name="copyright" value="8x8 Inc" />
     <meta name="email" value="jliu@8x8.com" />
-    <meta name="logLevel" value="info" />
+    <meta name="logLevel" value="debug" />
 
     <context>
         <!-- default TTS provider, voice and rate etc, but the params in say building block has precedence though -->
@@ -11,7 +11,6 @@
         <attribute name="ttsVoice" expr="'Salli'"/>
         <attribute name="ttsRate" expr="'Medium'"/>
     </context>
-
 
     <say providerExpr="'polly'" rateExpr="'medium'" voiceExpr="'Joey'" expr="'This is first test'"/>
     <say providerExpr="'polly'" rateExpr="'slow'" voiceExpr="'Salli'" expr="'This is second test'"/>

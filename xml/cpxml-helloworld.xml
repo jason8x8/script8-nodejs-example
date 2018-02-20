@@ -3,7 +3,7 @@
     <meta name="author" value="Jason Liu" />
     <meta name="copyright" value="8x8 Inc" />
     <meta name="email" value="jliu@8x8.com" />
-    <meta name="logLevel" value="info" />
+    <meta name="logLevel" value="debug" />
 
     <say>Hello World, Thank you and Good bye</say>
 
