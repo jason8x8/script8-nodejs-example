@@ -1,6 +1,6 @@
 # Script8 Node.js Quick Start Guide
 
-This guide will walk you through deploying a Node.js application on [Deis Workflow][].
+This guide will walk you through deploying a Node.js for Script8 service development
 
 ## Dowload ngrok
 
