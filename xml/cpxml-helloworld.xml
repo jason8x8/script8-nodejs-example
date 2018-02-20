@@ -4,6 +4,15 @@
     <meta name="copyright" value="8x8 Inc" />
     <meta name="email" value="jliu@8x8.com" />
     <meta name="logLevel" value="debug" />
+    <script>
+        <![CDATA[
+        function pre_process(req) {
+            console.info("I  got req:"+ JSON.stringify(req));
+            return { "result" : "success"};
+        }
+    ]]>
+    </script>
+    <log expr="JSON.stringify(pre_process({ 'query': 'abc'}))"/>
 
     <say>Hello World, Thank you and Good bye</say>
 
