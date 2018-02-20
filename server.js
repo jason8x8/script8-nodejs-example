@@ -1,10 +1,10 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var exec = require('child_process').exec;
-var app = express();
 var path = require('path');
 var basicAuth = require('basic-auth-connect');
+
+var app = express();
 
 app.use(basicAuth('admin', 'password'));
 
