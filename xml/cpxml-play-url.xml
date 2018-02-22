@@ -6,7 +6,11 @@
     <meta name="logLevel" value="info" />
 
     <play expr="'https://test-jliu0120.c9.io/music/0967.aiff'" maxTime="5" cache="true" ttl="3600"/>
-    <play expr="'https://test-jliu0120.c9.io/music/0957.ogg'" maxTime="5" cache="true" ttl="3600"/>
+    <play expr="'https://test-jliu0120.c9.io/music/0957.ogg'" maxTime="5" cache="true" ttl="3600">
+	<!--
+	<header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+	-->
+    </play>
 
     <play nameExpr="'my_0_wav'" expr="'https://test-jliu0120.c9.io/music/Roland-JV-2080-Pick-Bass-C2.wav'" maxTime="5" cache="true" ttl="3600"/>
     <play nameExpr="'my_1_mp3'" expr="'https://test-jliu0120.c9.io/music/SampleAudio_0.4mb.mp3'" maxTime="5" cache="true" ttl="3600"/>
