@@ -76,7 +76,7 @@
             <log expr="'I got result:'+JSON.stringify(result)"/>
             <if cond="result.statusCode == '200'">
                 <say>The voice mail has been uploaded to your drop box account successfully</say>
-                <email from="zsliu@8x8.com" to="jliu@8x8.com" subjectExpr="'You have a new voice mail from '+session.caller.address +' ' +session.caller.name"
+                <email from="jason.liu@8x8.com" to="jliu@8x8.com" subjectExpr="'You have a new voice mail from '+session.caller.address +' ' +session.caller.name"
                        msgExpr="'You have a new voice mail from:'+session.caller.address+ ' to your extension:'+session.callee.address+' in your dropbox - '+result.content.path_display"/>
             <else/>
                 <say>Failed to upload the voice mail recording to your dropbox account</say>
