@@ -62,14 +62,14 @@
 
             <!--
             curl -X POST https://content.dropboxapi.com/2/files/upload
-            -header "Authorization: Bearer 6Ai1on3jv50AAAAAAAAUIxch4"
+            -header "Authorization: Bearer dropbox-key-xxxx"
             -header "Dropbox-API-Arg: {\"path\": \"/voicemail/2016-02-16/12345.au\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}"
             -header "Content-Type: application/octet-stream"
             -data-binary @Welcome.au
             -->
 
             <http name="result" url="https://content.dropboxapi.com/2/files/upload" httpMethod="POST" contentType="application/octet-stream">
-                <header name="Authorization" expr="'Bearer 6Ai1on3jv50AAAAAAAAUIxch4'"/>
+                <header name="Authorization" expr="'Bearer dropbox-key-xxxx'"/>
                 <header name="Dropbox-API-Arg" expr="'{ &quot;path&quot;:&quot;/voicemail/'+dstr+'/'+vm+'&quot;, &quot;mode&quot;:&quot;add&quot;,&quot;autorename&quot;:true, &quot;mute&quot;:false}'"/>
                 <audio expr="record_vm"/>
             </http>
