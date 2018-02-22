@@ -5,11 +5,30 @@
     <meta name="email" value="jliu@8x8.com" />
     <meta name="logLevel" value="info" />
 
-    <play expr="'https://test-jliu0120.c9.io/music/0967.aiff'" maxTime="5" cache="true" ttl="3600"/>
-    <play expr="'https://test-jliu0120.c9.io/music/0957.ogg'" maxTime="5" cache="true" ttl="3600">
-	<!--
-	<header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
-	-->
+    <script>
+        <![CDATA[
+            function makeDropboxHeader(filePathName) {
+                return {"path": filePathName }
+            }
+        ]]>
+    </script>
+
+    <play expr="'https://test-jliu0120.c9.io/music/0967.aiff'" maxTime="5"/>
+    <play expr="'https://test-jliu0120.c9.io/music/0957.ogg'" maxTime="5" cache="true" ttl="3600" httpMethod="GET">
+        <!--
+        <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+        -->
+    </play>
+
+    <!--
+    https://www.dropbox.com/developers/documentation/http/documentation#files-download
+    -->
+    <play expr="'https://content.dropboxapi.com/2/files/download'" maxTime="5" cache="true" audioFileFormat="au" ttl="3600" httpMethod="POST">
+        <header name="Authorization" expr="'Bearer 6Ai1on3jv50AAAAAAAAVQP'"/>
+        <header name="Dropbox-API-Arg" expr="JSON.stringify(makeDropboxHeader('/voicemail/2016-1-27/1001_1004_1456600264871.au'))"/>
+        <!--
+        <body expr="makeBody('oaCAVmEyrqYnkZX9955Y')"/>
+        -->
     </play>
 
     <play nameExpr="'my_0_wav'" expr="'https://test-jliu0120.c9.io/music/Roland-JV-2080-Pick-Bass-C2.wav'" maxTime="5" cache="true" ttl="3600"/>
