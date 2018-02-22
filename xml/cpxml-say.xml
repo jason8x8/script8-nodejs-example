@@ -5,12 +5,12 @@
     <meta name="email" value="jliu@8x8.com" />
     <meta name="logLevel" value="info" />
 
-    <say providerExpr="'polly'" rateExpr="'medium'" voiceExpr="'Joey'" expr="'This is first test'" cache="true" ttl="3600"/>
-    <say providerExpr="'polly'" rateExpr="'slow'" voiceExpr="'Salli'" expr="'This is second test'" cache="true" ttl="3600"/>
-    <say providerExpr="'polly'" rateExpr="'slow'" voiceExpr="'Kendra'" expr="'This is third test'" cache="true" ttl="3600"/>
-    <say providerExpr="'nuance'" voiceExpr="'Samantha'" expr="'This is forth test'" cache="true" ttl="3600"/>
-    <say providerExpr="'nuance'" voiceExpr="'Tom'" expr="'This is fifth test'" cache="true" ttl="3600"/>
-    <say providerExpr="'bing'" rateExpr="'x-slow'" expr="'This is sixth test'" cache="true" ttl="3600"/>
+    <say providerExpr="'polly'" rateExpr="'medium'" voiceExpr="'Joey'" expr="'This is first test'"/>
+    <say providerExpr="'polly'" rateExpr="'slow'" voiceExpr="'Salli'" expr="'This is second test'"/>
+    <say providerExpr="'polly'" rateExpr="'slow'" voiceExpr="'Kendra'" expr="'This is third test'"/>
+    <say providerExpr="'nuance'" voiceExpr="'Samantha'" expr="'This is forth test'"/>
+    <say providerExpr="'nuance'" voiceExpr="'Tom'" expr="'This is fifth test'"/>
+    <say providerExpr="'bing'" rateExpr="'x-slow'" expr="'This is sixth test'"/>
 
     <say>Thank you using Script8 service, and good bye</say>
 
