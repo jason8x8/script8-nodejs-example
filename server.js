@@ -23,7 +23,7 @@ function main(req, res) {
     console.log(req.query);
     console.log(req.body);
 
-    console.log("Here's an hello world example");
+    console.log("Here's hello world example");
 
     fs.readFile(path.join(__dirname,'./xml/cpxml-helloworld.xml'), 'utf8', function(err, data) {
         if (err) {
