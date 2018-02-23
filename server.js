@@ -41,6 +41,24 @@ function main(req, res) {
     });
 }
 
+app.post('/sms', sms);
+function sms(req, res) {
+    console.log(req.body);
+
+    var resp = "<cpxml>";
+    if(req.body.message && req.body.message.toLowerCase() == 'password') {
+        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> Welcome to 8x8, please select wifi: 8x8-Guest, Password: 8x8guest8x8</message>";
+    } else {
+        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> I do not understand</message>";
+    }
+    resp += "</cpxml>";
+    console.log(resp);
+    res.writeHead(200, {
+        'Content-Type': 'application/xml'
+    });
+    res.end(resp);
+}
+
 function logger(req, res) {
     //console.log(req.body);
 
