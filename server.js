@@ -47,9 +47,9 @@ function sms(req, res) {
 
     var resp = "<cpxml>";
     if(req.body.message && req.body.message.toLowerCase() == 'password') {
-        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> Welcome to 8x8, please select wifi: 8x8-Guest, Password: 8x8guest8x8</message>";
+        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> Welcome to 8x8, please select wifi: 8x8-Guest, Password: Welcome8x8</message>";
     } else {
-        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> I do not understand</message>";
+        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'>Echo :"+req.body.message+"</message>";
     }
     resp += "</cpxml>";
     console.log(resp);
