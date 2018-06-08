@@ -16,29 +16,32 @@
 				xhttp.onreadystatechange = function() {
 					console.log("here you go state:"+this.readyState+ " status:"+this.status+" const:"+XMLHttpRequest.DONE);
 					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-						  // Action to be performed when the document is read;
+						  /* Action to be performed when the document is read; */
 						response = this.responseText;
 						console.log("I got response:"+response);
 					}
-				}
+				};
 				xhttp.open('GET',url, true);
 				xhttp.send(params);
 				return xhttp;
             }
-             function testAsyncHttpPost(url,params) {
+            function testAsyncHttpPost(url,params) {
+
                 var xhttp = new XMLHttpRequest();
 
 				xhttp.onreadystatechange = function() {
 					console.log("here you go state:"+this.readyState+ " status:"+this.status+" const:"+XMLHttpRequest.DONE);
 					if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-						// Action to be performed when the document is read;
+						/* Action to be performed when the document is read; */
 						response = this.responseText;
 						console.log("I got response:"+response);
 					}
-				}
+				};
 
-				//Send the proper header information along with the request
-				//xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				/*
+				Send the proper header information along with the request
+				xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				*/
 				xhttp.setRequestHeader("Content-type", "application/json");
 				xhttp.open('POST',url, true);
 				xhttp.send(params);
