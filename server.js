@@ -25,7 +25,9 @@ function main(req, res) {
 
     console.log("Here's hello world example");
 
-    fs.readFile(path.join(__dirname,'./xml/cpxml-helloworld.xml'), 'utf8', function(err, data) {
+//    fs.readFile(path.join(__dirname,'./xml/cpxml-get-ssn.xml'), 'utf8', function(err, data) {
+    fs.readFile(path.join(__dirname,'./xml/conference.xml'), 'utf8', function(err, data) {
+//    fs.readFile(path.join(__dirname,'./xml/voice-proxy.xml'), 'utf8', function(err, data) {
         if (err) {
             res.writeHead(404, {
                 'Content-Type': 'application/xml'
@@ -41,16 +43,42 @@ function main(req, res) {
     });
 }
 
-app.post('/sms', sms);
-function sms(req, res) {
+
+
+app.get('/next', next);
+app.post('/next', next);
+function next(req, res) {
+    console.log(req.query);
     console.log(req.body);
 
     var resp = "<cpxml>";
-    if(req.body.message && req.body.message.toLowerCase() == 'password') {
-        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'> Welcome to 8x8, please select wifi: 8x8-Guest, Password: Welcome8x8</message>";
-    } else {
-        resp += "<message to='"+req.body.from+"' from='"+req.body.to+"'>Echo :"+req.body.message+"</message>";
+
+    var str = req.body.digits; 
+    if(str) {
+         var chuncks = str.match(/.{1,1}/g);
+         var new_value = chuncks.join("-"); //returns 123-456-789
+         resp += "<say>You entered "+new_value+"</say>";
     }
+    resp += "<say>Your social security number is accepted</say>";
+    resp += "<form id=\"bye\"><submit expr=\"'/hangup'\" httpMethod=\"POST\"><param name=\"dummy\" expr=\"1+2\"></param></submit></form>";
+
+    resp += "</cpxml>";
+    console.log(resp);
+    res.writeHead(200, {
+        'Content-Type': 'application/xml'
+    });
+    res.end(resp);
+}
+
+app.post('/hangup', hangup);
+function hangup(req, res) {
+    console.log("HANGUP");
+    console.log(req.body);
+
+    var resp = "<cpxml>";
+
+    resp += "<say>Thank you using the service and good bye</say>";
+    resp += "<hangup/>";
     resp += "</cpxml>";
     console.log(resp);
     res.writeHead(200, {

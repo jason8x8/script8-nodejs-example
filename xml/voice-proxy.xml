@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cpxml xmlns="http://www.8x8.com/cpxml" format="generated" name="Script8 Demo" timeZone="0">
+    <log expr="'I got session:'+ JSON.stringify(session)"/>
+
+    <menu allowDirectExtCall="true" numOfRetries="3" timeout="5">
+        <say>Hi, Welcome to go jek voice proxy Demo.  To connect you call, please press 1. </say>
+        <choice option="1">
+            <say>calling external number</say>
+            <!--<transfer destination="19258031228" />-->
+            <call callerIdExpr="'12018405896'">
+                <number expr="'14086540972'"/>
+                <announcement  delay="1">
+                    <say>Hello Jared, Here is an important call from jason. Your call will be connected shortly </say>
+                    <!--<play>-->
+                        <!--<audio src="msg"/>-->
+                    <!--</play>-->
+                    <!--<say>Thank you and good bye...</say>-->
+                </announcement>
+            </call>
+            <say>Thank you for using eight x eight service. Good Bye</say>
+            <hangup/>
+        </choice>
+    </menu>
+
+</cpxml>
+
