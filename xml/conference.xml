@@ -39,7 +39,7 @@
     <say expr="'Ok, we will put you into to a conference now, please wait ...'"/>
     <joinConference expr="confId" confMode="voiceProxy">
         <onSoloParticipant>
-            <Say>Hello you are the only one in the conference now, please enjoy the music while waiting...</Say>
+            <say>Hello you are the only one in the conference now, please enjoy the music while waiting...</say>
             <play maxTime="10" timeUnit="seconds" url="/music/bach.au"/>
             <!-- 
             <play maxTime="10" timeUnit="seconds">
@@ -50,4 +50,7 @@
         <onEnterConference notification='/EnterConference'/>
         <onLeaveConference action='/LeaveConference'/>
     </joinConference>
+ <hangupHook>
+        <log expr="'I am in hangup hook now'"/>
+    </hangupHook>
 </cpxml>
