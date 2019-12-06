@@ -17,14 +17,25 @@ app.use(bodyParser.json());
 app.post('/', main);
 app.get('/', main);
 
+app.post('/conference', conference);
+app.get('/conference', conference);
+
+app.post('/voice2pstn', voice2pstn);
+app.get('/voice2pstn', voice2pstn);
+
 app.post('/logger', logger);
 
 function main(req, res) {
+    conference(req,res);
+}
+
+function conference(req, res) {
     console.log(req.query);
     console.log(req.body);
 
     console.log("Here's hello world example");
 
+//    fs.readFile(path.join(__dirname,'./xml/cpxml-helloworld.xml'), 'utf8', function(err, data) {
 //    fs.readFile(path.join(__dirname,'./xml/cpxml-get-ssn.xml'), 'utf8', function(err, data) {
     fs.readFile(path.join(__dirname,'./xml/conference.xml'), 'utf8', function(err, data) {
 //    fs.readFile(path.join(__dirname,'./xml/voice-proxy.xml'), 'utf8', function(err, data) {
@@ -43,6 +54,29 @@ function main(req, res) {
     });
 }
 
+function voice2pstn(req, res) {
+    console.log(req.query);
+    console.log(req.body);
+
+    console.log("Here's hello world example");
+
+//    fs.readFile(path.join(__dirname,'./xml/cpxml-helloworld.xml'), 'utf8', function(err, data) {
+//    fs.readFile(path.join(__dirname,'./xml/cpxml-get-ssn.xml'), 'utf8', function(err, data) {
+    fs.readFile(path.join(__dirname,'./xml/voice-proxy.xml'), 'utf8', function(err, data) {
+        if (err) {
+            res.writeHead(404, {
+                'Content-Type': 'application/xml'
+            });
+            res.end(data);
+            return console.log(err);
+        }
+        console.log(data);
+        res.writeHead(200, {
+            'Content-Type': 'application/xml'
+        });
+        res.end(data);
+    });
+}
 
 
 app.get('/next', next);

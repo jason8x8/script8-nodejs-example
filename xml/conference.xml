@@ -20,12 +20,33 @@
             function createPushMessage(conferenceId) {
                 return {"conferenceId" : conferenceId };
             }
+            function getXAttributes(sipReq) {
+                return sipReq && sipReq.headers["X-Attributes"] ? sipReq.headers["X-Attributes"] : undefined;
+            }
         ]]>
     </script>
-	<!--
+	
     <log expr="'I got conference call'"/>
--->
-    <var name="confId" expr="createConferenceId()"/>
+    <getSipRequest name="sipReq" sdp="true" headersExpr="'X-Attributes'"/>
+    <log expr="'I got sipReq:'+JSON.stringify(sipReq)"/>
+    <var name="xattr" expr="getXAttributes(sipReq)"/>
+    <if cond="xattr &amp;&amp; xattr.parameters.parameters.server_rt">
+        <var name="serverRoute" expr="xattr.parameters.parameters.server_rt"/>
+        <log expr="'I got serverRoute:'+serverRoute"/>
+    </if>
+    <if cond="xattr &amp;&amp; xattr.parameters.parameters.confId">
+        <var name="confId" expr="xattr.parameters.parameters.confId"/>
+        <log expr="'I got confId:'+confId"/>
+    </if>
+    <if cond="typeof confId === 'undefined'">
+        <!-- create conference id if no xattr/confId-->
+        <var name="confId" expr="createConferenceId()"/>
+        <log expr="'creating conference id:'+confId"/>
+        <var name="isPartyA" expr="true"/>
+    <else/>
+        <log expr="'found conference id from sip req:'+confId"/>
+        <var name="isPartyA" expr="false"/>
+    </if>
 	<!--
     <http name="pnsResult" url="http://httpbin.org/post" httpMethod="POST" contentType="application/json">
         <param name="dt" body="false" expr="new Date().toDateString()"/>
@@ -37,8 +58,12 @@
 	-->
     
     <say expr="'Ok, we will put you into to a conference now, please wait ...'"/>
+    <var name="isPartyConnected" expr="false"/>
     <joinConference expr="confId" confMode="voiceProxy">
         <onSoloParticipant>
+	    <if cond="session.conference.wait.cycles > 20">
+               <leaveConference cause="timeout"/>
+            </if>
             <say>Hello you are the only one in the conference now, please enjoy the music while waiting...</say>
             <play maxTime="10" timeUnit="seconds" url="/music/bach.au"/>
             <!-- 
@@ -47,10 +72,25 @@
             </play> 
             -->
         </onSoloParticipant>
-        <onEnterConference notification='/EnterConference'/>
-        <onLeaveConference action='/LeaveConference'/>
+        <onEnterConference/>
+        <onEnterConversation>
+           <var name="isPartyConnected" expr="true"/>
+        </onEnterConversation>
+        <onLeaveConference>
+             <say> Now I am leaving conference now ...</say>
+             <if cond="!isPartyConnected">
+                  <say> The call was not connected to B party ...</say>
+             </if>
+        </onLeaveConference>
     </joinConference>
  <hangupHook>
         <log expr="'I am in hangup hook now'"/>
+        <if cond="!isPartyConnected &amp;&amp; session.conference.leave.cause === 'hangup' ">
+           <http name="pnsResult" url="http://httpbin.org/post" httpMethod="POST" contentType="application/json">
+               <param name="dt" body="false" expr="new Date().toDateString()"/>
+               <header name="Authorization" expr="'Basic amFzb25fb2F1dGg6d2VsY29tZTEyMw=='"/>
+               <body expr="JSON.stringify(createPushMessage(confId))"/>
+           </http>
+        </if>
     </hangupHook>
 </cpxml>
